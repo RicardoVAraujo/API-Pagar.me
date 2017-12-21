@@ -3,6 +3,11 @@
 INTEGRAÇÃO COM A PAGAR.ME
 V8DESIGN - VINICIOS OLIVEIRA
 -->
+
+<?php
+require './config.inc.php'; //parametro de Configuração
+$Price = "10.50"; //Valor a ser Pago em decimal "informe centavos com . na frente"
+?>
 <html>
     <head>
         <title>Integrando a Pagar.me API</title>
@@ -32,9 +37,8 @@ V8DESIGN - VINICIOS OLIVEIRA
                         <h1 class="cover-heading">Integração com a API PAGAR.ME</h1>
                         <p class="lead">Realizando transações por Cartão de Credito e Boleto Bancario de forma rapida, pratica e objetiva.</p>
                         <p class="lead">
-                            <a href="#" class="btn btn-lg btn-secondary">Pagar por Boleto Bancario</a>
-                            <a href="#" class="btn btn-lg btn-secondary">Pagar por Cartão</a>
-                            <span class="btn btn_yellow bs_modal_open icon-connection" rel="OpenCreateAlert">Registrar Alerta</span>
+                            <a href="#" class="btn btn-lg btn-secondary bs_modal_open" rel="OpenCreatebillet">Pagar por Boleto Bancario</a>
+                            <a href="#" class="btn btn-lg btn-secondary bs_modal_open" rel="OpenCreateCard">Pagar por Cartão</a>
                         </p>
                     </div>
 
@@ -48,71 +52,89 @@ V8DESIGN - VINICIOS OLIVEIRA
             </div>
         </div>
 
-        <!--MODAL-->
-        <div class="bs_modal" id="OpenCreateAlert" style="display: none;">
+        <!--MODAL Cartão de Credito-->
+        <div class="bs_modal" id="OpenCreateCard" style="display: none;">
             <article class="bs_modal_base">
                 <header style="background: #ffb100;">
                     <span class="bs_moda_close">x</span>
-                    <h1 class="icon-connection">Registrar Alerta</h1>
+                    <h1>Pagamento por Cartão</h1>
                 </header>
-                <form class="form-horizontal" name="page_add" action="" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="callback" value="AppMapsAlert"/>
-                    <input type="hidden" name="callback_action" value="manage"/>
+                <form class="paymentAPI" name="paymentCard" action="" method="post" enctype="multipart/form-data">
+                    <input type='hidden' name='callback' value='valideCard'/> 
+                    <input type='hidden' name='encryption_key' value='<?= (PAGARME_SANDBOX ? PAGARME_SANDBOX_ENCRYPTION_KEY : PAGARME_ENCRYPTION_KEY); ?>'/>
 
                     <div class="bs_modal_content">
-                        <p>Informe abaixo o CEP e o tipo do alerta que deseja registrar</p>
+                        <h2>Informe os dados de seu cartão:</h2>
+                        <h2 style="font-size: 1em;">Pagamento de R$ <?= number_format($Price, '2', ',', '.'); ?></h2>
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="inputEmail4">Email</label>
-                                <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
-                            </div>
+                                <label>Numero do Cartão</label>
+                                <input class='form-control cardNumber' type='tel' name='card_number' placeholder='•••• •••• •••• ••••'>
+                            </div>                            
                             <div class="form-group col-md-6">
-                                <label for="inputPassword4">Password</label>
-                                <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputAddress">Address</label>
-                            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-                        </div>
-                        <div class="form-group">
-                            <label for="inputAddress2">Address 2</label>
-                            <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-                        </div>
-                        <div class="form-row">
+                                <label>CVV</label>
+                                <input class="form-control" type='tel' name='card_cvv' placeholder='•••'>
+                            </div>                     
+
                             <div class="form-group col-md-6">
-                                <label for="inputCity">City</label>
-                                <input type="text" class="form-control" id="inputCity">
+                                <label>Vencimento</label>
+                                <input class="form-control" type='tel' maxlength='7' name='card_expiration_date' placeholder='•• / ••'>
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="inputState">State</label>
-                                <select id="inputState" class="form-control">
-                                    <option selected>Choose...</option>
-                                    <option>...</option>
+
+                            <div class="form-group col-md-6">
+                                <label>Parcelamento</label>
+                                <select class="form-control" name="cardInstallmentQuantity" id="inputState">
+                                    <?php
+                                    $Payment = new PagarmeBS;
+                                    $Payment->ObterParcelas(number_format($Price, '2', '', ''));
+                                    foreach ($Payment->getResult() as $P):
+                                        echo "<option value='{$P['valorlimpo']}/{$P['numparcelas']}' >{$P['numparcelas']}x de R$ {$P['valormes']} - Total R$ {$P['valorfinal']}</option>";
+                                    endforeach;
+                                    ?>
                                 </select>
                             </div>
-                            <div class="form-group col-md-2">
-                                <label for="inputZip">Zip</label>
-                                <input type="text" class="form-control" id="inputZip">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox"> Check me out
-                                </label>
-                            </div>
                         </div>
 
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Nome Completo</label>
+                                <input class="form-control" type='text' name='card_holder_name' placeholder='Nome: (igual no cartão)'>
+                            </div> 
+
+                            <div class="form-group col-md-6">
+                                <label>CPF</label>
+                                <input type='text' class='numberOnly form-control' maxlength='11' name='cardCPF' placeholder='CPF: (Titular do cartão)'>
+                            </div> 
+                        </div>
 
                     </div>
                     <footer>
-                        <button name="public" value="1" class="btn btn-dark">Enviar <img class="form_load" style="margin-left: 10px; display: none" alt="Enviando Requisição!" title="Enviando Requisição!" src="_img/load_w.gif"/></button>
+                        <button name="public" value="1" class="btn btn-dark">Enviar <img class="form_load" style="margin-left: 10px; display: none; width: 25%;" alt="Enviando Requisição!" title="Enviando Requisição!" src="_img/load_w.gif"/></button>
                     </footer>
                 </form>
             </article>
         </div>	
+
+        <!--MODAL Boleto Bancario-->
+        <div class="bs_modal" id="OpenCreatebillet" style="display: none;">
+            <article class="bs_modal_base">
+                <header style="background: #9c27b0;">
+                    <span class="bs_moda_close">x</span>
+                    <h1>Pagamento por Boleto Bancario</h1>
+                </header>
+                <div class="bs_modal_content">
+                    <h2>Realizar o Pagamento:</h2>
+                    <h2 style="font-size: 1em;">Pagamento de R$ <?= number_format($Price, '2', ',', '.'); ?></h2>
+
+                    <a href="#" class="btn btn-dark">Gerar Boleto</a>
+                </div>
+                <footer>
+                    Pagamento por boleto podem demorar até 2 dias úteis para ser compensado
+                </footer>
+                </form>
+            </article>
+        </div>
 
         <script type="text/javascript" src="_js/jquery-3.2.1.min.js"></script><!-- Jquery -->
         <script type="text/javascript" src="_js/script.js"></script><!-- scripts -->
