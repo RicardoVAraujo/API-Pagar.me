@@ -16,6 +16,7 @@ $Price = "10.50"; //Valor a ser Pago em decimal "informe centavos com . na frent
 
         <!--CSS-->
         <link href="_css/bootstrap.min.css" rel="stylesheet">
+        <link href="_css/fonticon.css" rel="stylesheet">
         <link href="_css/base.css" rel="stylesheet">
 
     </head>
@@ -38,13 +39,14 @@ $Price = "10.50"; //Valor a ser Pago em decimal "informe centavos com . na frent
                         <p class="lead">Realizando transações por Cartão de Credito e Boleto Bancario de forma rapida, pratica e objetiva.</p>
                         <p class="lead">
                             <a href="#" class="btn btn-lg btn-secondary bs_modal_open" rel="OpenCreatebillet">Pagar por Boleto Bancario</a>
-                            <a href="#" class="btn btn-lg btn-secondary bs_modal_open" rel="OpenCreateCard">Pagar por Cartão</a>
+                            <a href="#" class="btn btn-lg btn-secondary bs_modal_open" rel="OpenCreateCard">Pagar por Cartão</a><br>
+                            <br><a href="#" class="btn btn-lg btn-secondary bs_modal_open" rel="OpenCreateModal">Bônus MODAL</a>
                         </p>
                     </div>
 
                     <div class="mastfoot">
                         <div class="inner">
-                            <p>Estruturado e desenvolvido pela <a href="https://www.v8design.com.br">V8 Design</a>, by <a href="https://twitter.com/mdo">Vinicios Oliveira</a>.</p>
+                            <p>Estruturado e desenvolvido pela <a href="https://www.v8design.com.br">V8 Design</a>, by <a href="https://www.facebook.com/vinicios.18">Vinicios Oliveira</a>.</p>
                         </div>
                     </div>
 
@@ -56,7 +58,7 @@ $Price = "10.50"; //Valor a ser Pago em decimal "informe centavos com . na frent
         <div class="bs_modal" id="OpenCreateCard" style="display: none;">
             <article class="bs_modal_base">
                 <header style="background: #ffb100;">
-                    <span class="bs_moda_close">x</span>
+                    <span class="bs_moda_close icon-cross icon-notext"></span>
                     <h1>Pagamento por Cartão</h1>
                 </header>
                 <form class="paymentAPI" name="paymentCard" action="" method="post" enctype="multipart/form-data">
@@ -120,17 +122,35 @@ $Price = "10.50"; //Valor a ser Pago em decimal "informe centavos com . na frent
         <div class="bs_modal" id="OpenCreatebillet" style="display: none;">
             <article class="bs_modal_base">
                 <header style="background: #9c27b0;">
-                    <span class="bs_moda_close">x</span>
+                    <span class="bs_moda_close icon-cross icon-notext"></span>
                     <h1>Pagamento por Boleto Bancario</h1>
                 </header>
                 <div class="bs_modal_content">
                     <h2>Realizar o Pagamento:</h2>
                     <h2 style="font-size: 1em;">Pagamento de R$ <?= number_format($Price, '2', ',', '.'); ?></h2>
-
-                    <a href="#" class="btn btn-dark">Gerar Boleto</a>
+                    <br>
+                    <a href="#" class="btn btn-dark btn_billet">Gerar Boleto</a>
                 </div>
                 <footer>
                     Pagamento por boleto podem demorar até 2 dias úteis para ser compensado
+                </footer>
+                </form>
+            </article>
+        </div>
+        
+        
+          <!--MODAL bonus-->
+        <div class="bs_modal" id="OpenCreateModal" style="display: none;">
+            <article class="bs_modal_base">
+                <header>
+                    <span class="bs_moda_close icon-cross icon-notext"></span>
+                    <h1>Modal de Bonus</h1>
+                </header>
+                <div class="bs_modal_content">
+                     <!-- Insira o conteudo da modal -->
+                </div>
+                <footer>
+                  <!-- Insira um botão ou uma menssagem aqui -->
                 </footer>
                 </form>
             </article>

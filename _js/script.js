@@ -31,7 +31,6 @@ $(function () {
 
 
 
-
 //Chamada Modulos Adicionais para o Payment
     if ($('.paymentAPI').length) {
         $.getScript('https://assets.pagar.me/pagarme-js/3.0/pagarme.min.js'); //API      
@@ -86,27 +85,9 @@ $(function () {
                     var Data = Form.serialize() + "&cardhash=" + card_hash;
                     $.post('_ajax/callback.ajax.php', Data, function (data) {
 
-                        //EXIBE ERROS IN FIELD   
-                        if (data.error) {
-                            $('.form_load').fadeOut(100);
-                            if (data.field) {
-                                Form.find("input[name='" + data.field + "']").after(data.error);
-                            } else {
-                                var Inputs = Form.find('input, select');
-                                Inputs.each(function (index, elem) {
-                                    if (!elem.value) {
-                                        $(this).after(data.error);
-                                    }
-                                });
-                            }
-                            $('.payment_check_error').fadeIn();
-                        }
-
-                        //DATA DINAMIC CONTENT
-                        if (data.divcontent) {
-                            $.each(data.divcontent, function (key, value) {
-                                $(key).html(value);
-                            });
+                        //EXIBE CALLBACKS
+                        if (data.alert) {
+                            bs_alert(data.alert[0], data.alert[1], data.alert[2], data.alert[3]);
                         }
 
                         $('.form_load').fadeOut();
@@ -115,6 +96,67 @@ $(function () {
                 });
             }
         }
+    });
+
+////############## Pagar por Boleto
+    $('.btn_billet').on('click', function () {
+        var Data = "callback=paymentBillet";
+        $.post('_ajax/callback.ajax.php', Data, function (data) {
+
+            //EXIBE CALLBACKS
+            if (data.alert) {
+                bs_alert(data.alert[0], data.alert[1], data.alert[2], data.alert[3]);
+            }
+
+            $('.form_load').fadeOut();
+        }, 'json');
+    });
+
+
+
+////############## FUNCTIONS
+
+    //ALERT DISPLAY
+    function bs_alert(Color, Icon, Title, Content) {
+        if (!$('.bs_alert').length) {
+            $("body").append('<div class="bs_alert"><div class="bs_alert_box"><div id="bs_alert_icon" class="icon-notext"></div><div class="bs_alert_text"><p class="bs_alert_title">{TITLE}</p><p class="bs_alert_content">{CONTENT}</p></div><div class="bs_alert_close"><span class="icon-cross icon-notext"></span></div></div></div>');
+        } else {
+            $('.bs_alert').remove();
+            $("body").append('<div class="bs_alert"><div class="bs_alert_box"><div id="bs_alert_icon" class="icon-notext"></div><div class="bs_alert_text"><p class="bs_alert_title">{TITLE}</p><p class="bs_alert_content">{CONTENT}</p></div><div class="bs_alert_close"><span class="icon-cross icon-notext"></span></div></div></div>');
+        }
+
+        var bsAlert = $(".bs_alert_box");
+        $('.bs_alert').fadeOut(200, function () {
+            bsAlert.addClass(Color);
+            bsAlert.find('.bs_alert_title').html(Title);
+            bsAlert.find('.bs_alert_content').html(Content);
+            bsAlert.find('#bs_alert_icon').removeClass().addClass('icon-' + Icon);
+            $('.bs_alert').fadeIn(200).css('display', 'flex');
+            bsAlert.animate({right: '10px'}, 300);
+
+            //Close Auto
+            setTimeout(function () {
+                bsAlert.animate({right: '-450px'}, 200, function () {
+                    $('.bs_alert').fadeOut(200, function () {
+                        setTimeout(function () {
+                            $('.bs_alert').remove();
+                        }, 210);
+                    });
+                });
+            }, 4000);
+        });
+    }
+
+//ALERT Close
+    $('html').on('click', '.bs_alert_close', function () {
+        var bsAlert = $(".bs_alert_box");
+        bsAlert.animate({right: '-450px'}, 200, function () {
+            $('.bs_alert').fadeOut(200, function () {
+                setTimeout(function () {
+                    $('.bs_alert').remove();
+                }, 210);
+            });
+        });
     });
 
 });

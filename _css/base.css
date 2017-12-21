@@ -102,6 +102,30 @@ body {color: #fff; text-align: center; text-shadow: 0 .05rem .1rem rgba(0,0,0,.5
 .bs_modal .bs_modal_base .bs_modal_content{padding: 30px 20px; color: #555; background-color: #fff; max-height: 60vh; overflow: auto;}
 .bs_modal .bs_modal_base footer{padding: 15px 20px; text-align: right;  background-color: #f5f6f8;}
 
+
+/*APPS::::ALERT MENSAGES*/
+.bs_alert{display: none; z-index: 99;}
+.bs_alert a{font-weight: bold; color: #fff; text-decoration: none;}
+.bs_alert a:hover{ text-decoration: underline;}
+.bs_alert_box{position: fixed; right: -390px; top: 15px; display: block; width: 400px; max-width: 90%; margin: auto; background: #555; color: #fff; padding: 18px; font-size: 0.8em; border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px;  box-shadow: 0 0 4px 0 #000; z-index: 999;}
+
+.bs_alert_box.green{background: #008068;}
+.bs_alert_box.blue{background: #096397;}
+.bs_alert_box.yellow{background: #E7A049;}
+.bs_alert_box.red{background: #C54550;}
+
+.bs_alert_close,
+.bs_alert_text,
+#bs_alert_icon{display: inline-block; vertical-align: middle;}
+#bs_alert_icon{width: 8%; font-size: 2em; line-height: 1; color: #fff; opacity: 0.5; text-align: center;}
+.bs_alert_text{width: 84%; padding: 0 20px;}
+.bs_alert_title{font-weight: bold; text-transform: uppercase; margin-bottom: 5px; line-height: 1;}
+.bs_alert_content{font-size: 0.875em; font-weight: 300;}
+.bs_alert_close{ width: 8%; text-align: center;}
+.bs_alert_close span{ line-height: 1; background: rgba(0,0,0,0.3); padding: 9px 10px 7px 10px; font-size: 0.75em; font-weight: 500; border-radius: 50%; -moz-border-radius: 50%; -webkit-border-radius: 50%; cursor: pointer;}
+.bs_alert_close span:hover{background: rgba(0,0,0,0.5);}
+
+
 /*
  * CardPayment
  */
